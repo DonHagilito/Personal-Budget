@@ -1,15 +1,12 @@
 const express = require('express');
 const app = express();
+const router = require('./router');
 
+app.use('/', router);
 
+module.exports = app;
 
-app.get('/', (req, res, next) => {
-    res.send('Hello world!')
-})
-
-
-
-const PORT = 4001;
+const PORT = 4000;
 app.listen(PORT, () =>{
     console.log('Server up and running');
 })
