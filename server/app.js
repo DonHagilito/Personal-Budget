@@ -3,6 +3,7 @@ const app = express();
 const router = require('./router');
 
 app.use('/', router);
+app.use(express.static("public"));
 
 module.exports = app;
 
