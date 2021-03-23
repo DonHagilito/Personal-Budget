@@ -10,7 +10,8 @@ const {
   addSavings,
   spendMoney,
   getTotalSavings,
-  getNonEnvelopeSavings
+  getNonEnvelopeSavings,
+  transferBetweenEnvelopes
 } = require('./db.js')
 
 router.use(bodyParser.json());
@@ -43,6 +44,16 @@ router.post('/api/envelope', (req, res, next) => {
   const addedEnvelope = addEnvelope(body.name, body.saveAmount, body.total)
 
   res.status(201).send(addedEnvelope);
+})
+
+router.post('/api/transfer/:from/:to', (req, res, next) => {
+  const fromId = parseInt(req.params.from);
+  const toId = parseInt(req.params.to);
+  const amount = req.body.amount
+
+  const arrWithUpdatedEnv = transferBetweenEnvelopes(fromId, toId, amount);
+
+  res.send({arrWithUpdatedEnv});
 })
 
 router.get('/api/envelopes/:id', (req, res, next) =>{

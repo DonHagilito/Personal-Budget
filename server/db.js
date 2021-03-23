@@ -152,6 +152,26 @@ const spendMoney = (amount, envelopeId) => {
     return envelopes[index].total
 }
 
+const transferBetweenEnvelopes = (fromId, toId, amount) => {
+    const fromIndex = getIndexById(fromId);
+    const toIndex = getIndexById(toId);
+    if (fromIndex === -1 || toIndex === -1 ){
+        const error = new Error('ID not found!');
+        error.status = 404;
+        throw error; 
+    }
+    if (envelopes[fromIndex].total < amount){
+        const error = new Error('Saved amount is less than spend amount!');
+        error.status = 400;
+        throw error;
+    }
+
+    envelopes[fromIndex].total -= amount;
+    envelopes[toIndex].total += amount;
+
+    return [envelopes[fromIndex], envelopes[toIndex]];
+}
+
 
 module.exports = {
     addEnvelope,
@@ -162,5 +182,6 @@ module.exports = {
     addSavings,
     spendMoney,
     getTotalSavings,
-    getNonEnvelopeSavings
+    getNonEnvelopeSavings,
+    transferBetweenEnvelopes
 };
