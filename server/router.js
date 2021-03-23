@@ -24,6 +24,10 @@ router.get('/style.css', function(req, res) {
     res.sendFile(__dirname + "/public/style.css");
   });
 
+  router.get('/script.js', function(req, res) {
+    res.sendFile(__dirname + "/script.js");
+  });
+
 router.get('/api/envelopes', function(req, res) {
     const envelopes = getEnvelopes();
     res.send(envelopes);
