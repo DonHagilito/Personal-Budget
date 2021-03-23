@@ -6,7 +6,11 @@ const {
   getEnvelopes,
   getEnvelopeById,
   updateEnvelopeById,
-  deleteEnvelopeById
+  deleteEnvelopeById,
+  addSavings,
+  spendMoney,
+  getTotalSavings,
+  getNonEnvelopeSavings
 } = require('./db.js')
 
 router.use(bodyParser.json());
@@ -24,18 +28,32 @@ router.get('/api/envelopes', function(req, res) {
     res.send(envelopes);
 });
 
+router.get('/api/total-savings', (req, res, next) =>{
+  const totalSavings = getTotalSavings();
+  res.send({totalSavings});
+})
+
+router.get('/api/non-envelope-savings', (req, res, next) =>{
+  const nonEnvelopeSavings = getNonEnvelopeSavings();
+  res.send({nonEnvelopeSavings});
+})
+
 router.post('/api/envelope', (req, res, next) => {
   const body = req.body
   const addedEnvelope = addEnvelope(body.name, body.saveAmount, body.total)
 
-  res.send(addedEnvelope);
+  res.status(201).send(addedEnvelope);
 })
 
 router.get('/api/envelopes/:id', (req, res, next) =>{
   const id = parseInt(req.params.id);
   const envelope = getEnvelopeById(id);
 
-  res.send(envelope);
+  if (envelope === -1){
+    res.status(404).send('ID not found!');
+  } else{
+    res.send(envelope);
+  }
 })
 
 router.put('/api/envelopes/:id', (req, res, next) => {
@@ -47,6 +65,7 @@ router.put('/api/envelopes/:id', (req, res, next) => {
 
 })
 
+
 router.delete('/api/envelopes/:id', (req, res, next) => {
   const id = parseInt(req.params.id);
 
@@ -56,7 +75,28 @@ router.delete('/api/envelopes/:id', (req, res, next) => {
   } else{
     res.status(404).send();
   }
+})
 
+router.put('/api/salary', (req, res, next) => {
+  const totalSavings = addSavings(req.body.salary);
+  if (totalSavings){ 
+    res.status(200).send({totalSavings});
+  } else{
+    res.status(500).send();
+  }
+})
+
+router.put('/api/spend/:id', (req, res, next) => {
+  const amount = req.body.amount;
+  const id = parseInt(req.params.id);
+  const newTotal = spendMoney(amount, id);
+
+  res.send({newTotal})
+})
+
+router.use((err, req, res, next) =>{
+  const status = err.status || 500;
+  res.status(status).send(err.message)
 })
 
 

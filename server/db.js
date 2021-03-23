@@ -1,20 +1,40 @@
 let envelopes = [{
-        name: 'Other',
-        saveAmount: 0,
-        total: 0,
+        name: 'Rent',
+        saveAmount: 5000,
+        total: 500,
         id: 0
+    },
+    {
+        name: 'Food',
+        saveAmount: 3000,
+        total: 500,
+        id: 1
+    },
+    {
+        name: 'Clothes',
+        saveAmount: 800,
+        total: 50,
+        id: 3
     }]
-
+let totalSavings = 0;
+let nonEnvelopeSavings = 0;
+    
     
 const addEnvelope = (name, saveAmount, total) =>{
-    const objectToPush = {
-        name: name,
-        saveAmount: saveAmount,
-        total: total ? total : 0,
-        id: envelopes.length
+    if( typeof name === 'string' && typeof saveAmount === 'number' && typeof total ==='number'){
+        const objectToPush = {
+            name: name,
+            saveAmount: saveAmount,
+            total: total ? total : 0,
+            id: envelopes.length
+        }
+        envelopes.push(objectToPush);
+        return envelopes[envelopes.length-1];
+    } else {
+        const error = new Error('Not all keys are present!');
+        error.status = 400;
+        throw error;
     }
-    envelopes.push(objectToPush);
-    return envelopes[envelopes.length-1];
 }
 
 
@@ -22,11 +42,24 @@ const getEnvelopes = () => {
     return envelopes;
 }
 
+const getTotalSavings = () => {
+    updateTotalSavings();
+    return totalSavings;
+}
+
+const getNonEnvelopeSavings = () => {
+    return nonEnvelopeSavings;
+}
+
 const getEnvelopeById = (id) => {
     const envelope = envelopes.filter(env =>{
         return env.id === id;
     })
-    return envelope;
+    if (envelope.length>0){
+        return envelope[0];
+    } else{
+        return -1;
+    }
 }
 
 const getIndexById = (id) => {
@@ -41,12 +74,23 @@ const getIndexById = (id) => {
 }
 
 const updateEnvelopeById = (id, name, saveAmount, total) => {
-    const index = getIndexById(id);
-    envelopes[index].name = name;
-    envelopes[index].saveAmount = saveAmount;
-    envelopes[index].total = total;
-
-    return envelopes[index];
+    if( typeof name === 'string' && typeof saveAmount === 'number' && typeof total ==='number'){
+        const index = getIndexById(id);
+         if (index === -1){
+             const error = new Error('ID not found!');
+             error.status = 404
+             throw error;
+         }
+        envelopes[index].name = name;
+        envelopes[index].saveAmount = saveAmount;
+        envelopes[index].total = total;
+        return envelopes[index];
+    } else {
+        const error = new Error('Not all keys are present!');
+        error.status = 400;
+        throw error;
+    }
+    
 }
 
 const deleteEnvelopeById = (id) => {
@@ -57,14 +101,66 @@ const deleteEnvelopeById = (id) => {
     }
 
     envelopes.splice(index, 1);
-    console.log(envelopes);
     return true;
 }
+
+const addSavings = (salary) => {
+
+    let salaryMinimum = 0;
+     envelopes.forEach(env => {
+        salaryMinimum +=env.saveAmount;
+    })
+
+    if(salary < salaryMinimum) {
+        const error = new Error('Salary too little to fill the envelopes');
+        error.status = 400;
+        throw error;
+    }
+
+    envelopes.forEach(env =>{
+        env.total += env.saveAmount;
+    })
+    nonEnvelopeSavings += salary-salaryMinimum;
+
+    updateTotalSavings();
+
+    return totalSavings;
+}
+
+const updateTotalSavings = () =>{
+    let envTotal = 0;
+    envelopes.forEach(env => {
+        envTotal += env.total;
+    })
+    totalSavings = envTotal + nonEnvelopeSavings;
+}
+
+const spendMoney = (amount, envelopeId) => {
+    const index = getIndexById(envelopeId);
+    if (index === -1){
+        const error = new Error('ID not found!');
+        error.status = 404;
+        throw error;
+    }
+    if (envelopes[index].total < amount){
+        const error = new Error('Saved amount is less than spend amount!');
+        error.status = 400;
+        throw error;
+    }
+    envelopes[index].total -= amount
+    updateTotalSavings();
+    return envelopes[index].total
+}
+
 
 module.exports = {
     addEnvelope,
     getEnvelopes,
     getEnvelopeById,
     updateEnvelopeById,
-    deleteEnvelopeById
+    deleteEnvelopeById,
+    addSavings,
+    spendMoney,
+    getTotalSavings,
+    getNonEnvelopeSavings
 };
