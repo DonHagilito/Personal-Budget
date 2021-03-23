@@ -2,7 +2,7 @@
 <html>
     <header>
         <link href="./style.css" type="text/css" rel="stylesheet">
-        <script src="/server/public/script.js" defer></script>
+        <script src="/script.js" defer></script>
     </header>
 
     <body>
@@ -27,16 +27,11 @@
         </div>
         <div class="categories">
             <h2>Budget categories</h2>
-            <table class="table">
+            <table class="table" id="categories-table">
                 <tr>
                   <th>Category</th>
                   <th>Savings amount</th>
                   <th>Total</th>
-                </tr>
-                <tr>
-                  <td>Other</td>
-                  <td><input type="text" id="other" name="other" value="500" size="5px" readonly></td>
-                  <td>50</td>
                 </tr>
                 <tr>
                 <form>
@@ -45,8 +40,12 @@
                   <td><input type="submit" value="Submit"></td>
                 </form>
                 </tr>
-              </table>
-              <br>
+            </table>
+            <br>
+            <label for="total-savings">Total Savings:</label>
+            <input type="text" id="total-savings" name="total-savings" size="5px" readonly>
+            <br>
+            <br>
         </div>
         <div class="spend">
             <h2>Spend Money</h2>
@@ -70,10 +69,8 @@
                     </th>
                     <th><input type="submit" value="Spend"></th>
                 </tr>
-                <form>
-                    
-                </form>
             </table>
+            <br>
         </div>
         
     </body>
