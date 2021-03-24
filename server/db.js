@@ -14,10 +14,11 @@ let envelopes = [{
         name: 'Clothes',
         saveAmount: 800,
         total: 50,
-        id: 3
+        id: 2
     }]
 let totalSavings = 0;
 let nonEnvelopeSavings = 0;
+let lastIdUsed = envelopes.length;
     
     
 const addEnvelope = (name, saveAmount, total) =>{
@@ -26,8 +27,9 @@ const addEnvelope = (name, saveAmount, total) =>{
             name: name,
             saveAmount: saveAmount,
             total: total ? total : 0,
-            id: envelopes.length
+            id: lastIdUsed
         }
+        lastIdUsed++;
         envelopes.push(objectToPush);
         return envelopes[envelopes.length-1];
     } else {
@@ -172,6 +174,17 @@ const transferBetweenEnvelopes = (fromId, toId, amount) => {
     return [envelopes[fromIndex], envelopes[toIndex]];
 }
 
+const updateNonEnvelopeMoney = (newAmount) => {
+    if ((newAmount > nonEnvelopeSavings && typeof newAmount === "number") || newAmount < 0){
+        const error = new Error('Not enough funds!');
+        error.status = 400;
+        throw error; 
+    }
+    nonEnvelopeSavings = newAmount;
+    updateTotalSavings();
+    return newAmount;
+}
+
 
 module.exports = {
     addEnvelope,
@@ -183,5 +196,6 @@ module.exports = {
     spendMoney,
     getTotalSavings,
     getNonEnvelopeSavings,
-    transferBetweenEnvelopes
+    transferBetweenEnvelopes,
+    updateNonEnvelopeMoney
 };

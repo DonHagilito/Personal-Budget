@@ -2,7 +2,7 @@
 <html>
     <header>
         <link href="./style.css" type="text/css" rel="stylesheet">
-        <script src="/script.js" defer></script>
+        <script src="/script.js" async></script>
     </header>
 
     <body>
@@ -18,11 +18,10 @@
         </div> 
         <div class="salary">
             <h2>Salary</h2>
-            <form>
-                <label for="salary">Enter salary:</label>
-                <input type="text" id="salary" name="salary">
-                <input type="submit" value="Submit">
-            </form>
+            <label for="salary">Enter salary:</label>
+            <input type="text" id="salary" name="salary">
+            <input type="submit" value="Submit" id="salary-submit">
+            <br>
             <br>
         </div>
         <div class="categories">
@@ -34,13 +33,15 @@
                   <th>Total</th>
                 </tr>
                 <tr>
-                <form>
                   <td><input type="text" id="category" name="category" value="Name.." size="5px"></td>
                   <td><input type="text" id="savings" name="savings" value="Amount.." size="5px"></td>
-                  <td><input type="submit" value="Submit"></td>
-                </form>
+                  <td><input type="submit" value="Add" id="submit-categories"></td>
                 </tr>
             </table>
+            <br>
+            <label for="non-envelope-savings">No-category savings:</label>
+            <input type="text" id="non-envelope-savings" name="non-envelope-savings" size="5px" value="0" readonly>
+            <br>
             <br>
             <label for="total-savings">Total Savings:</label>
             <input type="text" id="total-savings" name="total-savings" size="5px" readonly>
@@ -60,14 +61,9 @@
                     </th>
                     <th>
                     <select id="categories" name="categories">
-                        <option value="pizza">Pizza</option>
-                        <option value="curry">Curry</option>
-                        <option value="salad">Salad</option>
-                        <option value="ramen">Ramen</option>
-                        <option value="tacos">Tacos</option>
                     </select>
                     </th>
-                    <th><input type="submit" value="Spend"></th>
+                    <th><input type="submit" value="Spend" id="spend-button"></th>
                 </tr>
             </table>
             <br>

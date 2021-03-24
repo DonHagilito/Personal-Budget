@@ -11,7 +11,8 @@ const {
   spendMoney,
   getTotalSavings,
   getNonEnvelopeSavings,
-  transferBetweenEnvelopes
+  transferBetweenEnvelopes,
+  updateNonEnvelopeMoney
 } = require('./db.js')
 
 router.use(bodyParser.json());
@@ -99,6 +100,11 @@ router.put('/api/salary', (req, res, next) => {
   } else{
     res.status(500).send();
   }
+})
+
+router.put('/api/non-envelope-savings', (req, res, next) => {
+  const newNonEnvelopeSavings = updateNonEnvelopeMoney(req.body.nonEnvelopeSavings);
+  res.send({newNonEnvelopeSavings});
 })
 
 router.put('/api/spend/:id', (req, res, next) => {
