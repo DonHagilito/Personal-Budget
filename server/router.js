@@ -51,14 +51,14 @@ router.post('/api/envelope', (req, res, next) => {
   res.status(201).send(addedEnvelope);
 })
 
-router.post('/api/transfer/:from/:to', (req, res, next) => {
+router.put('/api/transfer/:from/:to', (req, res, next) => {
   const fromId = parseInt(req.params.from);
   const toId = parseInt(req.params.to);
   const amount = req.body.amount
 
   const arrWithUpdatedEnv = transferBetweenEnvelopes(fromId, toId, amount);
 
-  res.send({arrWithUpdatedEnv});
+  res.send(arrWithUpdatedEnv);
 })
 
 router.get('/api/envelopes/:id', (req, res, next) =>{
@@ -103,8 +103,8 @@ router.put('/api/salary', (req, res, next) => {
 })
 
 router.put('/api/non-envelope-savings', (req, res, next) => {
-  const newNonEnvelopeSavings = updateNonEnvelopeMoney(req.body.nonEnvelopeSavings);
-  res.send({newNonEnvelopeSavings});
+  const nonEnvelopeSavings = updateNonEnvelopeMoney(req.body.nonEnvelopeSavings);
+  res.send({nonEnvelopeSavings});
 })
 
 router.put('/api/spend/:id', (req, res, next) => {

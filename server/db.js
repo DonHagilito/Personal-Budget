@@ -17,12 +17,21 @@ let envelopes = [{
         id: 2
     }]
 let totalSavings = 0;
-let nonEnvelopeSavings = 0;
+let nonEnvelopeSavings = 400;
 let lastIdUsed = envelopes.length;
     
     
 const addEnvelope = (name, saveAmount, total) =>{
-    if( typeof name === 'string' && typeof saveAmount === 'number' && typeof total ==='number'){
+    if( typeof name !== 'string' || typeof saveAmount !== 'number' || typeof total !== 'number'){
+        const error = new Error('Not all keys are present!');
+        error.status = 400;
+        throw error;
+    }
+    if(saveAmount < 0 || total < 0 ){
+        const error = new Error('Negative numbers in the as saveAmount or total not allowed!');
+        error.status = 400;
+        throw error;
+    }
         const objectToPush = {
             name: name,
             saveAmount: saveAmount,
@@ -32,11 +41,6 @@ const addEnvelope = (name, saveAmount, total) =>{
         lastIdUsed++;
         envelopes.push(objectToPush);
         return envelopes[envelopes.length-1];
-    } else {
-        const error = new Error('Not all keys are present!');
-        error.status = 400;
-        throw error;
-    }
 }
 
 
@@ -76,22 +80,27 @@ const getIndexById = (id) => {
 }
 
 const updateEnvelopeById = (id, name, saveAmount, total) => {
-    if( typeof name === 'string' && typeof saveAmount === 'number' && typeof total ==='number'){
-        const index = getIndexById(id);
-         if (index === -1){
-             const error = new Error('ID not found!');
-             error.status = 404
-             throw error;
-         }
-        envelopes[index].name = name;
-        envelopes[index].saveAmount = saveAmount;
-        envelopes[index].total = total;
-        return envelopes[index];
-    } else {
+    if( typeof name !== 'string' || typeof saveAmount !== 'number' || typeof total !== 'number'){
         const error = new Error('Not all keys are present!');
         error.status = 400;
         throw error;
     }
+    if(saveAmount < 0 || total < 0 ){
+        const error = new Error('Negative numbers in the as saveAmount or total not allowed!');
+        error.status = 400;
+        throw error;
+    }
+    const index = getIndexById(id);
+    if (index === -1){
+        const error = new Error('ID not found!');
+        error.status = 404
+        throw error;
+    }
+        envelopes[index].name = name;
+        envelopes[index].saveAmount = saveAmount;
+        envelopes[index].total = total;
+        return envelopes[index];
+
     
 }
 
@@ -108,6 +117,12 @@ const deleteEnvelopeById = (id) => {
 
 const addSavings = (salary) => {
 
+    if (typeof salary != 'number'){
+        const error = new Error('Salary not a number!');
+        error.status = 400
+        throw error;
+    }
+    
     let salaryMinimum = 0;
      envelopes.forEach(env => {
         salaryMinimum +=env.saveAmount;
