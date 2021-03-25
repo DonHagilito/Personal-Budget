@@ -26,3 +26,8 @@ h1 {
 .spend{
     background-color: rgb(224, 174, 174);
 }
+
+.test:after {
+    content: '\2807';
+    font-size: 20px;
+    }

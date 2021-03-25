@@ -9,6 +9,7 @@ const categoriesSubmitButton = document.getElementById('submit-categories');
 const newCategory = document.getElementById('category');
 const newSavingsAmount = document.getElementById('savings');
 const selectCategories = document.getElementById('categories');
+const hideButton = document.getElementById('hide-button');
 
 const getJsonResponse = async (url) => {
     const response = await fetch(url);
@@ -43,9 +44,12 @@ const onStartUp = async () =>{
         let cell1 = row.insertCell(0);
         let cell2 = row.insertCell(1);
         let cell3 = row.insertCell(2);
+        let cell4 = row.insertCell(3);
         cell1.innerHTML = `${env.name}`;
         cell2.innerHTML = `<input type="text" id="${env.name}" name="${env.name}" value="${env.saveAmount}" size="5px" readonly>`;
         cell3.innerHTML = `${env.total}`;
+        cell4.innerHTML = `<div class="test"></div>`;
+        cell4.onclick = deleteCategory;
         //Add to the "Spend Money"-category list
         addToSpendMoneyList(env.name, env.id);
         loopIndex++;
@@ -115,9 +119,12 @@ const appendEnvelope = async (env) => {
     let cell1 = row.insertCell(0);
     let cell2 = row.insertCell(1);
     let cell3 = row.insertCell(2);
+    let cell4 = row.insertCell(3);
     cell1.innerHTML = `${env.name}`;
     cell2.innerHTML = `<input type="text" id="${env.name}" name="${env.name}" value="${env.saveAmount}" size="5px" readonly>`;
     cell3.innerHTML = `${env.total}`;
+    cell4.innerHTML = `<div class="test"></div>`;
+    cell4.onclick = deleteCategory;
     addToSpendMoneyList(env.name, env.id);
 }
 
@@ -226,6 +233,7 @@ spendButton.onclick = async () => {
     
             if (response.ok){
                 const jsonResponse = await response.json();
+
                 await updateValues();
                 return jsonResponse;
             }
@@ -234,6 +242,34 @@ spendButton.onclick = async () => {
         }
     }
 }
+
+const deleteCategory = async (event) => {
+    const eventTarget = event.target;
+    const parentRow = eventTarget.parentNode.parentNode;
+    const id = parentRow.id;
+
+    const url = "api/envelopes/" + id;
+    console.log(parentRow);
+    try{
+        const response = await fetch(url, {
+            method: 'DELETE',
+            mode: 'cors',
+        });
+
+        if (response.ok){
+            let row = document.getElementById(id);
+            row.remove();
+            await updateValues();
+        }
+    } catch(err){
+        console.log(err);
+    }
+} 
+
+hideButton.onclick = () =>{
+    const introduction = document.getElementsByClassName('introduction')[0].remove()
+}
+
 
 // getTotalSavings();
 onStartUp();
