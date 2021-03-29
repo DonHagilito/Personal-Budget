@@ -143,7 +143,7 @@ salarySubmitButton.onclick = async() =>{
     
 
     const objectToPost = {
-        salary: amount
+        salary: parseInt(amount)
     }
 
     try{
@@ -170,10 +170,9 @@ salarySubmitButton.onclick = async() =>{
 
 categoriesSubmitButton.onclick = async () =>{
     const name = newCategory.value;
-    const saveAmount = newSavingsAmount.value;
-
-    const response = await postEnvelope(name, saveAmount);
+    const saveAmount = parseInt(newSavingsAmount.value);
     
+    const response = await postEnvelope(name, saveAmount);
     appendEnvelope(response);
 }
 

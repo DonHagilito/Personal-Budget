@@ -389,25 +389,33 @@ describe('api', () => {
                 .send({salary: sumOfRequiredMoney-1})
                 .expect(400);
             })
+            it('Called with just enough salary returns 200', async () => {
+            const response = await request(app)
+                .get('/api/envelopes')
+                .send()
+                .expect(200);
+            arrOfEnvelopes = response.body
+            let sumOfRequiredMoney = 0;
+            arrOfEnvelopes.forEach((env) => {
+                sumOfRequiredMoney += env.saveAmount;
+            })
+            
+            return request(app)
+            .put('/api/salary')
+            .send({salary: sumOfRequiredMoney+1})
+            .expect(200);
+            })
         })
         describe('/api/non-envelope-savings', () => {
-            it('it updates the non-envelope savings', async () => {
-                const orignalNonEnvelopeSavings = await request(app)
-                    .get('/api/non-envelope-savings')
-                    .send()
-                    .expect(200)
-                    .then((response) => {
-                        return response.body.nonEnvelopeSavings;
-                    })
-                
+            it('it updates the non-envelope savings', async () => {                
                 return request(app)
                     .put('/api/non-envelope-savings')
                     .send({nonEnvelopeSavings: 50})
                     .expect(200)
                     .then((response) => {
-                        console.log(response.body)
+                        
                         const newNonEnvelopeSavings = response.body.nonEnvelopeSavings;
-                        expect(orignalNonEnvelopeSavings-50).to.be.equal(newNonEnvelopeSavings); 
+                        expect(newNonEnvelopeSavings).to.be.equal(50); 
                     })
             })
         })
