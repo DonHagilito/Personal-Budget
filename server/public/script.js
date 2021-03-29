@@ -31,11 +31,14 @@ const onStartUp = async () =>{
     const savingsAmount = await getJsonResponse(totalSavings);
     savingsField.value = savingsAmount.totalSavings;
 
+    //Add default spending category to spending list
+    addToSpendMoneyList('No-category savings', 'no-category');
+
 
     //Getting all the categories in the database and adding them to the table on the website.
     const envelopeArr = await getJsonResponse(envelopeUrl);
 
-    addToSpendMoneyList('No-category savings', 'no-category');
+    
     
     let loopIndex = 1;
     envelopeArr.forEach(env => {
@@ -171,7 +174,7 @@ salarySubmitButton.onclick = async() =>{
 categoriesSubmitButton.onclick = async () =>{
     const name = newCategory.value;
     const saveAmount = parseInt(newSavingsAmount.value);
-    
+
     const response = await postEnvelope(name, saveAmount);
     appendEnvelope(response);
 }
@@ -258,6 +261,8 @@ const deleteCategory = async (event) => {
         if (response.ok){
             let row = document.getElementById(id);
             row.remove();
+            let spendingRow = document.getElementById('opt'+ id);
+            spendingRow.remove();
             await updateValues();
         }
     } catch(err){
